@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:all:*)",
+      "Bash(npm run server:*)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(node -e \"require\\(''dotenv''\\).config\\(\\); console.log\\(''CLAUDE_API_KEY exists:'', !!process.env.CLAUDE_API_KEY\\); console.log\\(''Key starts with:'', process.env.CLAUDE_API_KEY?.substring\\(0, 10\\)\\)\")",
+      "Bash(node:*)",
+      "Bash(taskkill:*)",
+      "Bash(timeout:*)"
+    ]
+  }
+}
