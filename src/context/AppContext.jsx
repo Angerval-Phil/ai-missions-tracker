@@ -32,6 +32,12 @@ export function AppProvider({ children }) {
     progressRef.current = progress
   }, [progress])
 
+  // Use ref to always have latest chat history for async operations
+  const chatHistoryRef = useRef(chatHistory)
+  useEffect(() => {
+    chatHistoryRef.current = chatHistory
+  }, [chatHistory])
+
   useEffect(() => {
     if (isSupabaseConfigured()) {
       supabase.auth.getSession().then(({ data: { session } }) => {
@@ -165,9 +171,14 @@ export function AppProvider({ children }) {
       ...message,
       timestamp: new Date().toISOString()
     }
-    const newHistory = [...chatHistory, newMessage]
-    setChatHistory(newHistory)
-    saveLocalChat(newHistory)
+
+    // Use functional update to avoid stale closure issues
+    setChatHistory(currentHistory => {
+      const newHistory = [...currentHistory, newMessage]
+      chatHistoryRef.current = newHistory
+      saveLocalChat(newHistory)
+      return newHistory
+    })
 
     if (user && isSupabaseConfigured()) {
       await supabase.from('chat_history').insert({

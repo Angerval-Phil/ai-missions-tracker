@@ -64,19 +64,30 @@ Week 10 - Build AI App goals:
 - "Implement core features"
 - "Deploy and share your app"
 
-IMPORTANT: When the user mentions completing a task, match it to the EXACT goal text from above.
-For example:
-- "finished the NLP part" -> "Implement natural language processing for updates"
-- "done with NLP" -> "Implement natural language processing for updates"
-- "completed the dashboard" -> "Create progress visualization dashboard"
-- "built the architecture" -> "Design the goal tracking system architecture"
+IMPORTANT RULES:
+1. When the user mentions COMPLETING a task, match it to the EXACT goal text from above.
+   Examples:
+   - "finished the NLP part" -> completedTasks: ["Implement natural language processing for updates"]
+   - "done with NLP" -> completedTasks: ["Implement natural language processing for updates"]
+   - "completed the dashboard" -> completedTasks: ["Create progress visualization dashboard"]
+
+2. When the user wants to ADD a new goal or task, extract the new goal text.
+   Examples:
+   - "add a goal for vision models" -> newGoals: ["Investigate vision models"]
+   - "I want to add testing to week 1" -> newGoals: ["Add testing"]
+   - "can you add a 5th goal about video prompting" -> newGoals: ["Explore video prompting"]
+
+3. When the user mentions working on something, add to inProgressTasks.
+   - Use EXACT goal text if it matches an existing goal
+   - Otherwise, add the new task description
 
 Extract:
 1. missionId: Which week (1-10) based on keywords/context
 2. completedTasks: Array of EXACT goal texts from above that match what they completed
-3. inProgressTasks: Array of EXACT goal texts they're working on
-4. blockers: Any challenges mentioned
-5. sentiment: positive/neutral/negative/frustrated
+3. inProgressTasks: Array of EXACT goal texts they're working on (existing goals only)
+4. newGoals: Array of NEW goals the user wants to add (not in the list above)
+5. blockers: Any challenges mentioned
+6. sentiment: positive/neutral/negative/frustrated
 
 Respond ONLY with valid JSON:
 {
@@ -84,6 +95,7 @@ Respond ONLY with valid JSON:
   "missionConfidence": "high" | "medium" | "low",
   "completedTasks": ["exact goal text from list above"],
   "inProgressTasks": ["exact goal text from list above"],
+  "newGoals": ["new goal text to add"],
   "blockers": ["blocker description"],
   "sentiment": "positive" | "neutral" | "negative" | "frustrated",
   "suggestedActions": [],

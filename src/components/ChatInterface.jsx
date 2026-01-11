@@ -170,8 +170,14 @@ export default function ChatInterface({ isPopup = false }) {
             await addGoal(extraction.missionId, task)
           }
 
+          // For new goals: add them to the mission
+          for (const goal of extraction.newGoals || []) {
+            await addGoal(extraction.missionId, goal)
+            console.log(`Added new goal: ${goal}`)
+          }
+
           // Update mission status based on extraction
-          if (extraction.completedTasks?.length > 0 || extraction.inProgressTasks?.length > 0) {
+          if (extraction.completedTasks?.length > 0 || extraction.inProgressTasks?.length > 0 || extraction.newGoals?.length > 0) {
             const currentStatus = progress[extraction.missionId]?.status
             if (currentStatus === 'not_started') {
               await updateProgress(extraction.missionId, { status: 'in_progress' })
@@ -335,6 +341,9 @@ export default function ChatInterface({ isPopup = false }) {
             )}
             {lastExtraction.inProgressTasks?.length > 0 && (
               <p><span className="font-medium text-amber-600">In Progress:</span> {lastExtraction.inProgressTasks.join(', ')}</p>
+            )}
+            {lastExtraction.newGoals?.length > 0 && (
+              <p><span className="font-medium text-blue-600">New Goals Added:</span> {lastExtraction.newGoals.join(', ')}</p>
             )}
             {lastExtraction.blockers?.length > 0 && (
               <p><span className="font-medium text-red-600">Blockers:</span> {lastExtraction.blockers.join(', ')}</p>
